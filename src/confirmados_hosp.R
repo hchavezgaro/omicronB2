@@ -9,7 +9,7 @@ hosp <- read_csv(here("data", "personas_hospitalizadas_con_diagnostico_covid19.c
 casos <- read_csv(here("data", "casos_positivos.csv"))
 
 max_casos<- casos %>% 
-  filter(fecha_toma_muestra<"2021-12-01") %>%
+  # filter(fecha_toma_muestra<"2021-12-01") %>%
   mutate(maximo_casos=max(positivos_totales_cdmx)) %>% 
   select(maximo_casos) %>% 
   unique() %>% 
