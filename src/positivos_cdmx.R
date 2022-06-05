@@ -6,8 +6,8 @@ bd <- read_csv(here("data", "casos_positivos.csv"))
 bd %>% 
   gather(tipo, total, pruebas_totales:tasa_positividad_cdmx) %>% 
   as_tibble() %>% 
-  mutate(fecha_toma_muestra=dmy(fecha_toma_muestra)) %>% 
-  filter(fecha_toma_muestra> today()-90 & 
+  mutate(fecha_toma_muestra=ymd(fecha_toma_muestra)) %>% 
+  filter(fecha_toma_muestra> today()-45 & 
            fecha_toma_muestra <= max(fecha_toma_muestra)-1) %>% 
   group_by(fecha_toma_muestra, tipo) %>%
   summarise(total=sum(total, na.rm=T)) %>%

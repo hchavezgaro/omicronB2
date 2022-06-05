@@ -1,3 +1,7 @@
+# Evolución casos confirmados COVID (positivos, hospitalizados, intubados)
+# Solo CDMX
+# Mejoras: la línea de geom_ma no llega al 100% de los casos
+
 pacman::p_load(tidyverse, foreign, 
                janitor, readxl,
                ggrepel, tidyquant, 
@@ -22,6 +26,21 @@ fa <- casos%>%
   mutate(porc_casos=positivos_totales_cdmx/maximo_casos) %>% 
   select(fecha=fecha, Casos=porc_casos)
 
+# Solo se hace fa, no están actualizadas las hospitalizaciones
+fa %>%  
+  filter(fecha>="2021-11-15") %>%
+  ggplot( ) +
+  # geom_line(aes(x = fecha, y = Casos), size = 1.1, alpha = .2) +
+  # geom_point(aes(x = fecha, y = Casos),size = 1.1, alpha = .3) +
+  geom_ma(aes(x = fecha, y = Casos), size = 1.1, n = 7,
+          linetype = 1) +
+  scale_color_manual(values=c("#FF2700"))+
+  labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
+       subtitle = "Porcentaje con respecto al pico de Omicron (enero)", color="")+
+  scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b")+
+  ggthemes::theme_fivethirtyeight()
+
+
 fe <- hosp%>% 
   mutate(fecha=ymd(fecha)) %>% 
   mutate(maximo_hosp=max(hospitalizados_totales_cdmx), 
@@ -29,9 +48,6 @@ fe <- hosp%>%
   mutate(porc_hosp=hospitalizados_totales_cdmx/maximo_hosp, 
          porc_int=camas_intubados_cdmx/maximo_int) %>% 
   select(fecha=fecha, Hospitalizaciones=porc_hosp, Intubados=porc_int) 
-
-
-
 
 
 fi <- left_join(fa, fe) %>% 
@@ -48,7 +64,7 @@ fi %>%
   scale_color_manual(values=c("#FF2700", "#77AB43", "#008FD5"))+
   labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
        subtitle = "Porcentaje con respecto al pico de Delta", color="")+
-  scale_x_date(date_breaks= "2 weeks", date_labels = "%d/%b") +
+  scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b") +
   ggthemes::theme_fivethirtyeight()
 
 ggsave(here("out","casos_vs_delta.png"), width = 11, height = 5, units="in")
