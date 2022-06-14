@@ -1,6 +1,6 @@
 pacman::p_load(tidyverse, tidyquant, here)
 
-bd <- read_csv(here("data", "traslados_abr_2022.csv")) 
+bd <- read_csv(here("data", "traslados_may_2022.csv")) 
 
 max_trasla<- bd %>% 
   mutate(fecha=lubridate::ymd(fecha)) %>% 

@@ -20,7 +20,7 @@ bd %>%
   labs(title="Evolución de contagios \ny positividad COVID-19",
        subtitle = "En la CDMX", y="")+
   facet_wrap(~tipo, scales = "free")+
-  scale_x_date(date_breaks= "12 days", date_labels = "%d/%b", name = "")+
+  scale_x_date(date_breaks= "1 week", date_labels = "%d/%b", name = "")+
   ggthemes::theme_fivethirtyeight()
 
 
@@ -34,7 +34,7 @@ bd %>%
   gather(tipo, total, pruebas_totales:tasa_positividad_cdmx) %>% 
   as_tibble() %>% 
   filter(fecha_toma_muestra> "2021-04-11" & 
-           fecha_toma_muestra <= max(fecha_toma_muestra)-4) %>%
+           fecha_toma_muestra <= max(fecha_toma_muestra)-2) %>%
   mutate(mes=floor_date(fecha_toma_muestra, unit = "week")) %>%
   group_by(mes, tipo) %>%
   summarise(totales=sum(total, na.rm=T)) %>%
