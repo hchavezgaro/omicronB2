@@ -21,7 +21,7 @@ max_casos<- casos %>%
 
 
 fa <- casos%>% 
-  mutate(fecha=ymd(fecha_toma_muestra)) %>% 
+  mutate(fecha=dmy(fecha_toma_muestra)) %>% 
   mutate(maximo_casos=max_casos) %>% 
   mutate(porc_casos=positivos_totales_cdmx/maximo_casos) %>% 
   select(fecha=fecha, Casos=porc_casos)
@@ -38,7 +38,11 @@ fa %>%
   labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
        subtitle = "Porcentaje con respecto al pico de Omicron (enero)", color="")+
   scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b")+
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
   ggthemes::theme_fivethirtyeight()
+
+
+ggsave(here("out","vs_omicronb1_wave.png"), width = 10, height =5, units="in")
 
 
 fe <- hosp%>% 

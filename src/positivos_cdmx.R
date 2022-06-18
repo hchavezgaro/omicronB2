@@ -4,11 +4,17 @@ bd <- read_csv(here("data", "casos_positivos.csv"))
 
 
 bd %>% 
-  gather(tipo, total, pruebas_totales:tasa_positividad_cdmx) %>% 
+  gather(tip, total, pruebas_totales:tasa_positividad_cdmx) %>% 
   as_tibble() %>% 
-  mutate(fecha_toma_muestra=ymd(fecha_toma_muestra)) %>% 
+  mutate(tipo=case_when(tip=="positivos_totales" ~ "Positivos ZMVM",
+                        tip=="positivos_totales_cdmx" ~ "Positivos CDMX",
+                        tip=="pruebas_totales" ~ "Puebas ZMVM",
+                        tip=="pruebas_totales_cdmx" ~ "Pruebas CDMX", 
+                        tip=="tasa_positividad" ~ "Tasa positividad ZMVM", 
+                        tip=="tasa_positividad_cdmx" ~ "Tasa positividad CDMX"),
+         fecha_toma_muestra=dmy(fecha_toma_muestra)) %>% 
   filter(fecha_toma_muestra> today()-90 & 
-           fecha_toma_muestra <= max(fecha_toma_muestra)-1) %>% 
+           fecha_toma_muestra <= max(fecha_toma_muestra)-3) %>% 
   group_by(fecha_toma_muestra, tipo) %>%
   summarise(total=sum(total, na.rm=T)) %>%
   
@@ -18,13 +24,13 @@ bd %>%
   geom_ma(size = 1.1, color = "#FF2700", n = 7,
           linetype = 1) +
   labs(title="Evolución de contagios \ny positividad COVID-19",
-       subtitle = "En la CDMX", y="")+
-  facet_wrap(~tipo, scales = "free")+
-  scale_x_date(date_breaks= "3 weeks", date_labels = "%d/%b", name = "")+
+       subtitle = "En la Zona Metrpolitana y CDMX", y="")+
+  facet_wrap(~tipo, scales = "free", ncol = 2)+
+  scale_x_date(date_breaks= "12 days", date_labels = "%d/%b", name = "")+
   ggthemes::theme_fivethirtyeight()
 
 
-ggsave(here("out","positivos_cdmx_update.png"), width = 11, height = 5, units="in")
+ggsave(here("out","positivos_cdmx_update.png"), width = 9, height =11, units="in")
 
 
 # semana geom_step ---------------------------------------------------------------
