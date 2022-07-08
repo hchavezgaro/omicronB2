@@ -32,6 +32,13 @@ prueba <- variantes %>%
 prueba <- variantes %>% 
   filter(ano==2022, 
          semana!=52) 
+
+relleno <- tibble(variant=c("Omicron B.1.", "Omicron BA.5"), 
+                 semana=c(25, 25), 
+                 freq=c(0,0))
+
+prueba <- bind_rows(prueba, relleno)
+
 # fechas <- tibble(some_dates=1:181,
 #                  valores=NA) %>% 
 #   mutate(valores=seq(ymd(20220101), ymd(20220630), 'day'),
