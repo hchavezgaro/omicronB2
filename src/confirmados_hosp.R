@@ -67,7 +67,7 @@ fi %>%
           linetype = 1) +
   scale_color_manual(values=c("#FF2700", "#77AB43", "#008FD5"))+
   labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
-       subtitle = "Porcentaje con respecto al pico de Delta", color="")+
+       subtitle = "Porcentaje con respecto al pico de omicron (enero)", color="")+
   scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
   ggthemes::theme_fivethirtyeight()
