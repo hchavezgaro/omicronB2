@@ -21,23 +21,23 @@ max_casos<- casos %>%
 
 
 fa <- casos%>% 
-  mutate(fecha=dmy(fecha_toma_muestra)) %>% 
+  mutate(fecha=ymd(fecha_toma_muestra)) %>% 
   mutate(maximo_casos=max_casos) %>% 
   mutate(porc_casos=positivos_totales_cdmx/maximo_casos) %>% 
   select(fecha=fecha, Casos=porc_casos)
 
 # Solo se hace fa, no están actualizadas las hospitalizaciones
 fa %>%  
-  filter(fecha>="2021-11-15") %>%
+  filter(fecha>="2020-11-15" & fecha< max(fecha)-2) %>%
   ggplot( ) +
   # geom_line(aes(x = fecha, y = Casos), size = 1.1, alpha = .2) +
   # geom_point(aes(x = fecha, y = Casos),size = 1.1, alpha = .3) +
   geom_ma(aes(x = fecha, y = Casos), size = 1.1, n = 7,
           linetype = 1) +
   scale_color_manual(values=c("#FF2700"))+
-  labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
+  labs(title="Evolución de casos COVID-19, CDMX",
        subtitle = "Porcentaje con respecto al pico de Omicron (enero)", color="")+
-  scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b")+
+  scale_x_date(date_breaks= "8 weeks", date_labels = "%d/%b")+
   scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
   ggthemes::theme_fivethirtyeight()
 
@@ -69,6 +69,7 @@ fi %>%
   labs(title="Evolución de hospitalizaciones COVID-19, CDMX",
        subtitle = "Porcentaje con respecto al pico de Delta", color="")+
   scale_x_date(date_breaks= "4 weeks", date_labels = "%d/%b") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1))+
   ggthemes::theme_fivethirtyeight()
 
 ggsave(here("out","casos_vs_delta.png"), width = 11, height = 5, units="in")
